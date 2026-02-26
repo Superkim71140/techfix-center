@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ติดต่อเรา - TechFix Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-['Kanit'] text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Navigation Bar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100 relative">
+        <div class="max-w-7xl mx-auto px-4 py-3 md:py-4 flex flex-wrap justify-between items-center gap-3">
+            <!-- Logo & Hamburger Menu Wrapper -->
+            <div class="flex justify-between items-center w-full md:w-auto">
+                <a href="index.html" class="flex items-center transition inline-block">
+                    <img src="assets/images/logo-transparent.png" alt="Logo" class="h-14 md:h-16 lg:h-20 object-contain">
+                </a>
+                
+                <div class="flex items-center space-x-4 md:hidden">
+                    <a href="cart.html" class="relative cursor-pointer text-blue-600 transition">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm" style="display: none;">0</span>
+                    </a>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-blue-600 focus:outline-none p-2 rounded-lg bg-gray-50 border border-gray-100">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar (Full width on mobile, inline on desktop) -->
+            <div class="flex-1 w-full md:max-w-xl md:mx-4 relative order-3 md:order-none">
+                <input type="text" placeholder="ค้นหารุ่นมือถือที่รับซ่อม หรือ อะไหล่สินค้า..." 
+                    class="w-full bg-blue-50 border border-blue-200 text-gray-700 py-2.5 md:py-2 px-4 pl-11 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-sm text-sm md:text-base">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-blue-400"></i>
+                </div>
+                <button class="absolute inset-y-0 right-0 pr-4 flex items-center text-blue-500 hover:text-blue-700">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-5 lg:space-x-6 text-sm font-medium order-2 md:order-none">
+                <a href="service.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-tools mr-1"></i>ส่งซ่อม</a>
+                <a href="products.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-store mr-1"></i>อะไหล่</a>
+                <a href="tracking.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-map-marker-alt mr-1"></i>ติดตามงานซ่อม</a>
+                <a href="contact.html" class="text-blue-600 transition-all duration-300 font-bold">ติดต่อเรา</a>
+                <a href="cart.html" class="relative cursor-pointer text-blue-600 transition hidden md:block group">
+                    <div class="p-2 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </div>
+                    <span class="cart-badge absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm" style="display: none;">0</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Mobile Nav Menu (Hidden by default) -->
+        <div id="mobileMenu" class="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-xl hidden flex-col divide-y divide-gray-100 z-50">
+            <a href="service.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-tools mr-3 text-blue-500 w-5"></i> ส่งซ่อมด่วน</a>
+            <a href="products.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-store mr-3 text-blue-500 w-5"></i> เลือกซื้ออะไหล่</a>
+            <a href="tracking.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-map-marker-alt mr-3 text-blue-500 w-5"></i> ติดตามงานซ่อม</a>
+            <a href="contact.html" class="px-6 py-4 text-blue-600 bg-blue-50 flex items-center font-bold transition-colors duration-300"><i class="fas fa-address-book mr-3 text-blue-500 w-5"></i> ติดต่อเรา ศูนย์บริการ</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Banner -->
+        <div class="relative bg-blue-900 overflow-hidden min-h-[300px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=1600&q=80" alt="TechFix Store" class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-transparent"></div>
+            <div class="relative z-10 max-w-7xl mx-auto px-4 w-full">
+                <h1 class="text-4xl md:text-5xl font-semibold text-white mb-4 tracking-tight drop-shadow-md">ติดต่อเรา <br/><span class="text-blue-400 font-light text-3xl">TechFix Center สาขา MBK</span></h1>
+                <p class="text-blue-100 text-lg max-w-xl font-light">ศูนย์ซ่อมและจัดจำหน่ายอะไหล่มือถือครบวงจรใจกลางเมือง เดินทางสะดวก พร้อมให้บริการด้วยช่างมืออาชีพ</p>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-16">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- Left Column: Contact Details -->
+                <div class="flex flex-col space-y-8">
+                    <div>
+                        <h2 class="text-3xl font-semibold text-slate-800 mb-6 flex items-center border-b-2 border-blue-100 pb-3">
+                            <i class="fas fa-map-marked-alt text-blue-600 mr-3"></i> ข้อมูลติดต่อร้าน
+                        </h2>
+                        
+                        <div class="space-y-6 text-lg text-slate-600 font-light">
+                            <!-- Address -->
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shrink-0 mr-4 shadow-sm border border-blue-100">
+                                    <i class="fas fa-map-pin text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-slate-800">ที่อยู่:</h4>
+                                    <p class="mt-1 leading-relaxed">TechFix Center<br/>ชั้น 4 โซนมือถือ (Mobile Zone), MBK Center<br/>แขวงปทุมวัน, เขตปทุมวัน, กรุงเทพมหานคร 10330</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Hours -->
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shrink-0 mr-4 shadow-sm border border-blue-100">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-slate-800">เวลาทำการ:</h4>
+                                    <p class="mt-1">เปิดให้บริการทุกวัน<br/><span class="text-blue-600 font-medium">10:00 - 20:00 น.</span></p>
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shrink-0 mr-4 shadow-sm border border-blue-100">
+                                    <i class="fas fa-phone-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-slate-800">เบอร์โทรศัพท์:</h4>
+                                    <a href="tel:0928371926" class="mt-1 text-blue-600 font-medium text-xl hover:text-blue-800 inline-block cursor-pointer transition">092-837-1926</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Medias -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">ช่องทางออนไลน์</h3>
+                        <div class="flex space-x-4">
+                            <a href="https://line.me/ti/p/~supergetfood" target="_blank" class="w-14 h-14 bg-[#00ce00] hover:bg-green-600 text-white rounded-2xl flex items-center justify-center text-3xl shadow-sm hover:shadow-md transition transform hover:-translate-y-0.5">
+                                <i class="fab fa-line"></i>
+                            </a>
+                            <a href="https://www.facebook.com/chokhthwitantraklu?locale=th_TH" target="_blank" class="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl flex items-center justify-center text-3xl shadow-sm hover:shadow-md transition transform hover:-translate-y-0.5">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="w-14 h-14 bg-gradient-to-tr from-rose-500 via-pink-500 to-purple-500 hover:opacity-90 text-white rounded-2xl flex items-center justify-center text-3xl shadow-sm hover:shadow-md transition transform hover:-translate-y-0.5">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Map & Form -->
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-[2rem] blur opacity-30"></div>
+                    <div class="glass-card rounded-[2rem] p-6 lg:p-8 relative h-full flex flex-col">
+                        
+                        <!-- Map embedded -->
+                        <div class="w-full h-64 md:h-80 bg-gray-200 rounded-2xl overflow-hidden shadow-inner mb-8 border-4 border-white">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.596041170845!2d100.5273760759325!3d13.744319386646545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2992db98baaa1%3A0xc319114757e2bbd8!2sMBK%20Center!5e0!3m2!1sen!2sth!4v1700000000000!5m2!1sen!2sth" 
+                                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <h3 class="text-2xl font-semibold text-slate-800 mb-4"><i class="fas fa-paper-plane text-blue-500 mr-2"></i>ส่งข้อความถึงเรา</h3>
+                        <form class="space-y-5 flex-grow flex flex-col pt-2">
+                            <div>
+                                <input type="text" placeholder="ชื่อ-นามสกุล..." class="w-full border border-slate-200 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 bg-slate-50 focus:bg-white transition text-base md:text-lg font-light placeholder-slate-400 text-slate-700 shadow-sm">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <input type="tel" placeholder="เบอร์ติดต่อ..." class="w-full border border-slate-200 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 bg-slate-50 focus:bg-white transition text-base md:text-lg font-light placeholder-slate-400 text-slate-700 shadow-sm">
+                                <input type="email" placeholder="อีเมล (ถ้ามี)..." class="w-full border border-slate-200 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 bg-slate-50 focus:bg-white transition text-base md:text-lg font-light placeholder-slate-400 text-slate-700 shadow-sm">
+                            </div>
+                            <div class="flex-grow">
+                                <textarea rows="3" placeholder="พิมพ์ข้อความสอบถามหรือรายละเอียดงานซ่อมที่นี่..." class="w-full h-full border border-slate-200 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 bg-slate-50 focus:bg-white transition resize-none text-base md:text-lg font-light placeholder-slate-400 text-slate-700 shadow-sm"></textarea>
+                            </div>
+                            <button type="button" class="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 hover:brightness-110 text-white font-medium py-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 mt-auto flex items-center justify-center text-lg transform hover:-translate-y-0.5">
+                                ส่งข้อความ <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Simple -->
+    <footer class="bg-gray-900 mt-auto text-gray-400 py-8 text-center text-sm border-t-4 border-blue-600">
+        <div class="space-y-2">
+            <p>&copy; 2026 TechFix Center. สงวนลิขสิทธิ์ทั้งหมด.</p>
+            <p>Produced by <a href="https://kimx-wed.vercel.app/" target="_blank" class="text-blue-500 hover:text-blue-400 hover:brightness-110 transition-all duration-300 font-medium">kimxwed</a></p>
+        </div>
+    </footer>
+
+    <!-- Floating Line Chat Button -->
+    <a href="https://line.me/ti/p/~supergetfood" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#00ce00] text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-[0_4px_15px_rgba(0,206,0,0.4)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(0,206,0,0.6)] transition-all duration-300 transform">
+        <i class="fab fa-line"></i>
+    </a>
+
+    <!-- Navbar Mobile Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    const icon = btn.querySelector('i');
+                    if(menu.classList.contains('hidden')) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    } else {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- Global Scripts -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

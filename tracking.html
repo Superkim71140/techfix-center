@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ติดตามสถานะงานซ่อม - TechFix Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Modern Minimal Animations */
+        @keyframes scanline {
+            0% { top: 0; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .scanner-line {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            position: absolute;
+            left: 0;
+            animation: scanline 2s ease-in-out infinite;
+            z-index: 50;
+        }
+
+        /* Pulse */
+        .pulse-shadow {
+            animation: pulseShadow 2s infinite;
+        }
+        @keyframes pulseShadow {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); transform: scale(0.95); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); transform: scale(1); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); transform: scale(0.95); }
+        }
+
+        /* Fade transitions */
+        .fade-enter { opacity: 0; transform: translateY(20px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        /* Progress Bar */
+        .progress-bar-fill {
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Custom Scrollbar for Logs */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @keyframes stripemove {
+            0% { background-position: 1rem 0; }
+            100% { background-position: 0 0; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-['Kanit'] text-gray-800 flex flex-col min-h-screen relative overflow-x-hidden">
+
+    <!-- Ambient Background Glow (Subtle White/Blue) -->
+    <div class="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-100/50 blur-[100px] pointer-events-none"></div>
+
+    <!-- Navigation Bar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100 relative">
+        <div class="max-w-7xl mx-auto px-4 py-3 md:py-4 flex flex-wrap justify-between items-center gap-3">
+            <!-- Logo & Hamburger Menu Wrapper -->
+            <div class="flex justify-between items-center w-full md:w-auto">
+                <a href="index.html" class="flex items-center transition inline-block">
+                    <img src="assets/images/logo-transparent.png" alt="Logo" class="h-14 md:h-16 lg:h-20 object-contain">
+                </a>
+                
+                <div class="flex items-center space-x-4 md:hidden">
+                    <a href="cart.html" class="relative cursor-pointer text-blue-600 transition">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm" style="display: none;">0</span>
+                    </a>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-blue-600 focus:outline-none p-2 rounded-lg bg-gray-50 border border-gray-100">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar (Full width on mobile, inline on desktop) -->
+            <div class="flex-1 w-full md:max-w-xl md:mx-4 relative order-3 md:order-none">
+                <input type="text" placeholder="ค้นหารุ่นมือถือที่รับซ่อม หรือ อะไหล่สินค้า..." 
+                    class="w-full bg-blue-50 border border-blue-200 text-gray-700 py-2.5 md:py-2 px-4 pl-11 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-sm text-sm md:text-base">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-blue-400"></i>
+                </div>
+                <button class="absolute inset-y-0 right-0 pr-4 flex items-center text-blue-500 hover:text-blue-700">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-5 lg:space-x-6 text-sm font-medium order-2 md:order-none">
+                <a href="service.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-tools mr-1"></i>ส่งซ่อม</a>
+                <a href="products.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-store mr-1"></i>อะไหล่</a>
+                <a href="tracking.html" class="text-blue-600 font-bold transition-all duration-300"><i class="fas fa-map-marker-alt mr-1"></i>ติดตามงานซ่อม</a>
+                <a href="cart.html" class="relative cursor-pointer text-blue-600 transition hidden md:block group">
+                    <div class="p-2 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </div>
+                    <span class="cart-badge absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm" style="display: none;">0</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Mobile Nav Menu (Hidden by default) -->
+        <div id="mobileMenu" class="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-xl hidden flex-col divide-y divide-gray-100 z-50">
+            <a href="service.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-tools mr-3 text-blue-500 w-5"></i> ส่งซ่อมด่วน</a>
+            <a href="products.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-store mr-3 text-blue-500 w-5"></i> เลือกซื้ออะไหล่</a>
+            <a href="tracking.html" class="px-6 py-4 text-blue-600 bg-blue-50 flex items-center font-bold transition-colors duration-300"><i class="fas fa-map-marker-alt mr-3 text-blue-500 w-5"></i> ติดตามงานซ่อม</a>
+            <a href="contact.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-address-book mr-3 text-blue-500 w-5"></i> ติดต่อเรา ศูนย์บริการ</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col items-center justify-start pt-12 px-4 relative z-10 pb-20">
+        
+        <div class="text-center mb-10 w-full max-w-4xl">
+            <h1 class="text-4xl md:text-5xl font-semibold text-slate-800 mb-4 tracking-tight">
+                <i class="fas fa-search-location mr-3 text-blue-500"></i>ตรวจสอบสถานะงานซ่อม
+            </h1>
+            <p class="text-slate-500 text-lg md:text-xl font-light">กรณีกรอกรหัสใบรับซ่อม (เช่น TF-1025) เพื่อเข้าถึงข้อมูลความคืบหน้าของอุปกรณ์</p>
+        </div>
+
+        <!-- Search UI -->
+        <div class="w-full max-w-2xl relative z-20 mb-12">
+            <form id="trackingForm" onsubmit="startScan(event)" class="relative">
+                <div class="relative flex items-center bg-white border-2 border-transparent focus-within:border-blue-400 rounded-full overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300">
+                    <div class="pl-6 text-slate-400">
+                        <i class="fas fa-ticket-alt text-xl"></i>
+                    </div>
+                    <input type="text" id="trackInput" required placeholder="รหัสใบซ่อม หรือ เบอร์โทรศัพท์" 
+                        class="w-full py-5 px-5 font-medium text-lg text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none transition-colors">
+                    <button type="submit" class="bg-blue-600 text-white px-8 py-4 m-1 rounded-full font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all duration-300 flex items-center space-x-2 mr-1 transform hover:-translate-y-0.5 hover:scale-105 hover:brightness-110">
+                        <span>ค้นหาข้อมูล</span>
+                        <i class="fas fa-arrow-right text-sm"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Loading / Scanning Screen (Hidden by default) -->
+        <div id="scanningScreen" class="hidden w-full max-w-4xl bg-white rounded-3xl p-16 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden flex flex-col items-center justify-center min-h-[400px] border border-slate-100">
+            <div class="scanner-line"></div>
+            
+            <div class="relative w-40 h-40 rounded-full border border-blue-50 flex items-center justify-center bg-blue-50/50">
+                <i class="fas fa-satellite-dish text-5xl text-blue-400 animate-pulse"></i>
+            </div>
+            
+            <div class="mt-8 text-xl text-blue-600 font-medium text-center w-full">
+                <span id="scanText" class="inline-block animate-pulse font-light">กำลังสแกนหาข้อมูลในระบบ...</span>
+                <div class="w-[60%] mx-auto h-1.5 bg-slate-100 mt-6 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 w-0" id="scanProgress" style="transition: width 0.15s ease-out;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Results (Hidden by default) -->
+        <div id="dashboardResults" class="hidden w-full max-w-5xl fade-enter">
+            
+            <!-- Global Progress & Header -->
+            <div class="bg-white rounded-3xl p-8 mb-8 flex flex-col md:flex-row items-center justify-between shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-6 mb-6 md:mb-0 w-full md:w-auto">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm shrink-0 border border-blue-100">
+                        <i class="fas fa-mobile-alt text-3xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1 mt-1">อุปกรณ์ที่รับซ่อม</h2>
+                        <div class="text-2xl font-semibold text-slate-800 flex items-center flex-wrap gap-2">
+                            <span id="resTrackId" class="text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">TF-1025</span> 
+                            <span class="text-slate-500 text-xl font-normal">| iPhone 13 Pro</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-1/3 text-right">
+                    <div class="flex justify-between text-sm font-medium text-slate-600 mb-3">
+                        <span>ความคืบหน้าการซ่อม</span>
+                        <span class="text-blue-600 font-semibold">65% ดำเนินการแล้ว</span>
+                    </div>
+                    <div class="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 w-[65%] rounded-full progress-bar-fill relative shadow-sm">
+                           <!-- Stripe pattern overlay -->
+                           <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(-45deg, rgba(255,255,255,.5) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.5) 50%, rgba(255,255,255,.5) 75%, transparent 75%, transparent); background-size: 1rem 1rem; animation: stripemove 1s linear infinite;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left Column: Status overview & Timeline -->
+                <div class="lg:col-span-2 space-y-8">
+                    
+                    <!-- Hardware Status Cards -->
+                    <div class="bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-slate-100">
+                        <h3 class="font-semibold text-slate-800 mb-8 flex items-center text-lg">
+                            <i class="fas fa-microchip text-blue-500 mr-3"></i> สถานะการตรวจเช็คอะไหล่
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <!-- Display -->
+                            <div class="bg-yellow-50 rounded-2xl p-6 flex flex-col items-center justify-center text-center relative border border-yellow-100 shadow-[0_2px_10px_rgb(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 group hover:shadow-md">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm border border-yellow-200 transition-shadow duration-300 group-hover:shadow-[0_0_15px_rgba(234,179,8,0.5)]">
+                                    <i class="fas fa-layer-group text-xl text-yellow-500"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-500 mb-1 tracking-wide">หน้าจอ</span>
+                                <span class="text-sm font-semibold text-yellow-600">กำลังเปลี่ยน</span>
+                                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500 absolute top-4 right-4 animate-pulse"></div>
+                            </div>
+                            <!-- Battery -->
+                            <div class="bg-green-50 rounded-2xl p-6 flex flex-col items-center justify-center text-center relative border border-green-100 shadow-[0_2px_10px_rgb(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 group hover:shadow-md">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm border border-green-200 transition-shadow duration-300 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                                    <i class="fas fa-battery-full text-xl text-green-500"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-500 mb-1 tracking-wide">แบตเตอรี่</span>
+                                <span class="text-sm font-semibold text-green-600">ปกติ</span>
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500 absolute top-4 right-4 shadow-sm"></div>
+                            </div>
+                            <!-- Board -->
+                            <div class="bg-green-50 rounded-2xl p-6 flex flex-col items-center justify-center text-center relative border border-green-100 shadow-[0_2px_10px_rgb(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 group hover:shadow-md">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm border border-green-200 transition-shadow duration-300 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                                    <i class="fas fa-memory text-xl text-green-500"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-500 mb-1 tracking-wide">เมนบอร์ด</span>
+                                <span class="text-sm font-semibold text-green-600">ปกติ</span>
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500 absolute top-4 right-4 shadow-sm"></div>
+                            </div>
+                            <!-- Camera -->
+                            <div class="bg-slate-50 rounded-2xl p-6 flex flex-col items-center justify-center text-center relative border border-slate-200 shadow-[0_2px_10px_rgb(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 group hover:shadow-md">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm border border-slate-200 transition-shadow duration-300 group-hover:shadow-[0_0_15px_rgba(148,163,184,0.5)]">
+                                    <i class="fas fa-camera text-xl text-slate-400"></i>
+                                </div>
+                                <span class="text-xs font-medium text-slate-500 mb-1 tracking-wide">กล้อง</span>
+                                <span class="text-sm font-medium text-slate-500">รอทดสอบ</span>
+                                <div class="w-2.5 h-2.5 rounded-full bg-slate-300 absolute top-4 right-4"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Timeline -->
+                    <div class="bg-white rounded-3xl p-8 shadow-md border border-gray-100 overflow-hidden relative">
+                        <h3 class="font-bold text-gray-800 mb-10 flex items-center text-lg">
+                            <i class="fas fa-stream text-blue-500 mr-3"></i> ลำดับขั้นตอนการทำงาน
+                        </h3>
+                        
+                        <div class="relative z-10 flex justify-between items-start pb-4">
+                            <!-- Line track (Desktop) -->
+                            <div class="hidden sm:block absolute top-[24px] left-[10%] right-[10%] h-1 bg-gray-100 -z-10 rounded"></div>
+                            <div class="hidden sm:block absolute top-[24px] left-[10%] w-[40%] h-1 bg-blue-500 -z-10 rounded"></div>
+
+                            <!-- Mobile Line track -->
+                            <div class="sm:hidden absolute top-[24px] left-[24px] bottom-0 w-1 bg-gray-100 -z-10 rounded"></div>
+                            <div class="sm:hidden absolute top-[24px] left-[24px] h-[50%] w-1 bg-blue-500 -z-10 rounded"></div>
+
+                            <div class="flex flex-col sm:flex-row w-full justify-between gap-6 sm:gap-2">
+                                <!-- Step 1 -->
+                                <div class="flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center w-full sm:w-1/5 group cursor-default">
+                                    <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-0 sm:mb-3 shadow-sm border border-blue-100 shrink-0 z-10 mr-4 sm:mr-0 transition-shadow duration-300 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-slate-700">รับเครื่อง</div>
+                                        <div class="text-xs text-slate-400 font-light mt-1">10:00 น.</div>
+                                    </div>
+                                </div>
+                                <!-- Step 2 -->
+                                <div class="flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center w-full sm:w-1/5 group cursor-default">
+                                    <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-0 sm:mb-3 shadow-sm border border-blue-100 shrink-0 z-10 mr-4 sm:mr-0 transition-shadow duration-300 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-slate-700">ตรวจเช็คอาการ</div>
+                                        <div class="text-xs text-slate-400 font-light mt-1">10:15 น.</div>
+                                    </div>
+                                </div>
+                                <!-- Step 3 (Current) -->
+                                <div class="flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center w-full sm:w-1/5 relative z-20 transform sm:-translate-y-2 group cursor-default">
+                                    <div class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl mb-0 sm:mb-2 pulse-shadow shadow-lg shrink-0 mr-4 sm:mr-0 transition-shadow duration-300 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.6)]">
+                                        <i class="fas fa-wrench"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-blue-600 mt-1">กำลังดำเนินการซ่อม</div>
+                                        <div class="text-xs font-medium text-blue-500 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 mt-1 inline-block">กําลังทำงาน</div>
+                                    </div>
+                                </div>
+                                <!-- Step 4 -->
+                                <div class="flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center w-full sm:w-1/5 opacity-50 group transition-opacity duration-300 hover:opacity-100 cursor-default">
+                                    <div class="w-12 h-12 rounded-full bg-white border border-slate-200 text-slate-400 flex items-center justify-center text-lg mb-0 sm:mb-3 bg-white shrink-0 z-10 mr-4 sm:mr-0 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(148,163,184,0.5)] group-hover:border-slate-300 group-hover:text-slate-500">
+                                        <i class="fas fa-vial"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-slate-500">ทดสอบการใช้งาน</div>
+                                        <div class="text-xs text-slate-400 font-light mt-1">รอการดำเนินการ</div>
+                                    </div>
+                                </div>
+                                <!-- Step 5 -->
+                                <div class="flex flex-row sm:flex-col items-center sm:items-center text-left sm:text-center w-full sm:w-1/5 opacity-50 group transition-opacity duration-300 hover:opacity-100 cursor-default">
+                                    <div class="w-12 h-12 rounded-full bg-white border border-slate-200 text-slate-400 flex items-center justify-center text-lg mb-0 sm:mb-3 bg-white shrink-0 z-10 mr-4 sm:mr-0 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(148,163,184,0.5)] group-hover:border-slate-300 group-hover:text-slate-500">
+                                        <i class="fas fa-hand-holding-heart"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-slate-500">พร้อมรับเครื่องคืน</div>
+                                        <div class="text-xs text-slate-400 font-light mt-1">รอการดำเนินการ</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Terminal Log & Action -->
+                <div class="space-y-6">
+                    
+                    <!-- Live Tech Log (Clean UI) -->
+                    <div class="bg-blue-50/50 rounded-3xl border border-blue-100 p-0 flex flex-col h-[350px] shadow-sm overflow-hidden">
+                        <!-- Header -->
+                        <div class="bg-blue-100/50 px-5 py-4 flex items-center border-b border-blue-100">
+                            <i class="fas fa-clipboard-list text-blue-500 mr-2 text-lg"></i>
+                            <span class="font-bold text-blue-900">บันทึกจากช่างเทคนิค</span>
+                            <span class="ml-auto text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full flex items-center">
+                                <span class="w-2 h-2 rounded-full bg-green-500 mr-1 animate-pulse"></span> อัปเดตสด
+                            </span>
+                        </div>
+                        <!-- Body -->
+                        <div class="p-5 text-sm flex-grow overflow-y-auto custom-scrollbar text-gray-700 leading-relaxed bg-white/50" id="terminalLogContent">
+                            <ul class="space-y-4 relative border-l-2 border-gray-200 ml-2 pl-4">
+                                <li class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <span class="text-gray-400 text-xs font-mono mr-2">10:00 น.</span> 
+                                    <span class="font-medium">รับเครื่องลูกค้าระบบเรียบร้อย</span>
+                                </li>
+                                <li class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <span class="text-gray-400 text-xs font-mono mr-2">10:05 น.</span> 
+                                    <span class="font-medium">เริ่มการจ่ายไฟและเช็คกระแสพื้นฐาน</span>
+                                </li>
+                                <li class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <span class="text-gray-400 text-xs font-mono mr-2">10:15 น.</span> 
+                                    <span class="font-medium">สรุปอาการ: จอในแตกเป็นเส้น ต้องเปลี่ยนจอยกชุด</span>
+                                </li>
+                                <li class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <span class="text-gray-400 text-xs font-mono mr-2">10:22 น.</span> 
+                                    <span class="font-medium">เบิกอะไหล่หน้าจอแท้ (เกรดศูนย์) จากคลัง</span>
+                                </li>
+                                <li class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <span class="text-gray-400 text-xs font-mono mr-2">10:30 น.</span> 
+                                    <span class="font-medium text-orange-600 mb-1 block">นำเครื่องเข้าเครื่องเป่าลมร้อนเพื่อละลายกาวกันน้ำเดิม เครื่องติดกาวแน่นมาก ต้องระวังเป็นพิเศษครับ</span>
+                                </li>
+                                <li class="relative">
+                                    <div class="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                                    <span class="text-blue-500 text-xs font-bold mr-2">10:45 น. (ล่าสุด)</span> 
+                                    <span class="font-bold text-blue-800">แกะหน้าจอเก่าออกจากบอร์ดสำเร็จ กำลังทำความสะอาดกาวเดิมเพื่อประกอบจอใหม่ครับ <span class="inline-block w-1.5 h-4 bg-blue-500 animate-pulse align-middle ml-1"></span></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact Action Button -->
+                    <a href="https://line.me/ti/p/~supergetfood" target="_blank" class="block w-full">
+                        <div class="bg-white border hover:border-green-300 rounded-3xl p-5 text-center transition-all group cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md">
+                            <div class="absolute inset-0 bg-green-50 transform scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 ease-in-out"></div>
+                            <div class="relative z-10 flex items-center justify-center space-x-3">
+                                <div class="w-12 h-12 bg-[#00ce00] text-white rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform text-2xl">
+                                    <i class="fab fa-line"></i>
+                                </div>
+                                <div class="text-left">
+                                    <h4 class="font-bold text-gray-800 group-hover:text-green-700 transition-colors">สอบถามช่างโดยตรง</h4>
+                                    <p class="text-xs text-gray-500">แคปหน้าจอนี้ส่ง Line หาช่างได้เลย</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer Simple -->
+    <footer class="bg-gray-900 mt-auto text-gray-400 py-8 text-center text-sm border-t-4 border-blue-600 relative z-20">
+        <div class="space-y-2">
+            <p>&copy; 2026 TechFix Center. สงวนลิขสิทธิ์ทั้งหมด.</p>
+            <p>Produced by <a href="https://kimx-wed.vercel.app/" target="_blank" class="text-blue-500 hover:text-blue-400 hover:brightness-110 transition-all duration-300 font-medium">kimxwed</a></p>
+        </div>
+    </footer>
+
+    <!-- Floating Line Chat Button -->
+    <a href="https://line.me/ti/p/~supergetfood" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#00ce00] text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-[0_4px_15px_rgba(0,206,0,0.4)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(0,206,0,0.6)] transition-all duration-300 transform">
+        <i class="fab fa-line"></i>
+    </a>
+
+    <script>
+        function startScan(event) {
+            event.preventDefault();
+            const input = document.getElementById('trackInput').value.trim();
+            if (!input) return;
+
+            // Fade out form lightly
+            document.getElementById('trackingForm').style.opacity = '0.5';
+            document.getElementById('trackingForm').style.pointerEvents = 'none';
+            
+            const scanScreen = document.getElementById('scanningScreen');
+            const results = document.getElementById('dashboardResults');
+            
+            // Setup scanning texts in Thai
+            const texts = [
+                "เชื่อมต่อฐานข้อมูลศูนย์ซ่อม...", 
+                "ตรวจสอบดัชนีหมายเลขรับซ่อม...", 
+                "กำลังดึงข้อมูลชิ้นส่วนอะไหล่...",
+                "ถอดรหัสบันทึกการซ่อมล่าสุด..."
+            ];
+            let tIdx = 0;
+            const textEl = document.getElementById('scanText');
+            const progress = document.getElementById('scanProgress');
+            
+            scanScreen.classList.remove('hidden');
+            results.classList.add('hidden');
+            results.classList.remove('fade-enter-active');
+            
+            progress.style.width = '0%';
+            
+            const scanInt = setInterval(() => {
+                let currentW = parseFloat(progress.style.width || 0);
+                if(currentW < 95) {
+                    progress.style.width = (currentW + Math.random() * 15) + '%';
+                }
+                
+                tIdx = (tIdx + 1) % texts.length;
+                textEl.textContent = texts[tIdx];
+            }, 300);
+
+            // Finish scan after ~1.6s
+            setTimeout(() => {
+                clearInterval(scanInt);
+                progress.style.width = '100%';
+                textEl.textContent = "พบข้อมูลและประมวลผลเสร็จสิ้น";
+                textEl.classList.add('text-green-600');
+                textEl.classList.remove('text-blue-600');
+                
+                setTimeout(() => {
+                    // Hide scan, show results
+                    scanScreen.classList.add('hidden');
+                    document.getElementById('trackingForm').style.display = 'none'; // hide completely after search
+                    
+                    document.getElementById('resTrackId').textContent = input.toUpperCase();
+                    
+                    // Show results with animation
+                    results.classList.remove('hidden');
+                    void results.offsetWidth; // trigger reflow
+                    results.classList.add('fade-enter-active');
+
+                    // Auto scroll to terminal bottom
+                    const term = document.getElementById('terminalLogContent');
+                    term.scrollTop = term.scrollHeight;
+                }, 400);
+
+            }, 1600);
+        }
+    </script>
+    <!-- Navbar Mobile Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    const icon = btn.querySelector('i');
+                    if(menu.classList.contains('hidden')) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    } else {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                });
+            }
+        });
+    </script>
+    <!-- Global Scripts -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

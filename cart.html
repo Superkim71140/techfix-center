@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตะกร้าสินค้า - TechFix Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-['Kanit'] text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Navigation Bar -->
+    <header class="bg-white shadow-md sticky top-0 z-50 relative">
+        <div class="max-w-7xl mx-auto px-4 py-3 md:py-4 flex flex-wrap justify-between items-center gap-3">
+            <!-- Logo & Hamburger Menu Wrapper -->
+            <div class="flex justify-between items-center w-full md:w-auto">
+                <a href="index.html" class="flex items-center transition inline-block">
+                    <img src="assets/images/logo-transparent.png" alt="Logo" class="h-14 md:h-16 lg:h-20 object-contain">
+                </a>
+                
+                <div class="flex items-center space-x-4 md:hidden">
+                    <a href="cart.html" class="relative cursor-pointer text-blue-600 transition">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm transition-transform duration-300" style="display: none;">0</span>
+                    </a>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-blue-600 focus:outline-none p-2 rounded-lg bg-gray-50 border border-gray-100">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar (Full width on mobile, inline on desktop) -->
+            <div class="flex-1 w-full md:max-w-xl md:mx-4 relative order-3 md:order-none hidden sm:block">
+                <!-- Search bar hidden on very small devices for cleaner cart view -->
+                <input type="text" placeholder="ค้นหาอะไหล่, หน้าจอ, แบตเตอรี่..." 
+                    class="w-full bg-blue-50 border border-blue-200 text-gray-700 py-2.5 md:py-2 px-4 pl-11 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-sm text-sm md:text-base">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-blue-400"></i>
+                </div>
+                <button class="absolute inset-y-0 right-0 pr-4 flex items-center text-blue-500 hover:text-blue-700">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-5 lg:space-x-6 text-sm font-medium order-2 md:order-none">
+                <a href="service.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-tools mr-1"></i>ส่งซ่อม</a>
+                <a href="products.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-store mr-1"></i>อะไหล่</a>
+                <a href="tracking.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500"><i class="fas fa-map-marker-alt mr-1"></i>ติดตามงานซ่อม</a>
+                <a href="contact.html" class="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:underline underline-offset-4 decoration-2 decoration-blue-500/0 hover:decoration-blue-500">ติดต่อเรา</a>
+                <a href="cart.html" class="relative cursor-pointer text-blue-600 transition hidden md:block group">
+                    <div class="p-2 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </div>
+                    <span class="cart-badge absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm transition-transform duration-300" style="display: none;">0</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Mobile Nav Menu (Hidden by default) -->
+        <div id="mobileMenu" class="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-xl hidden flex-col divide-y divide-gray-100 z-50">
+            <a href="service.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-tools mr-3 text-blue-500 w-5"></i> ส่งซ่อมด่วน</a>
+            <a href="products.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-store mr-3 text-blue-500 w-5"></i> เลือกซื้ออะไหล่</a>
+            <a href="tracking.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-map-marker-alt mr-3 text-blue-500 w-5"></i> ติดตามงานซ่อม</a>
+            <a href="contact.html" class="px-6 py-4 text-gray-700 hover:text-blue-500 hover:bg-gray-50 flex items-center font-medium transition-colors duration-300"><i class="fas fa-address-book mr-3 text-blue-500 w-5"></i> ติดต่อเรา ศูนย์บริการ</a>
+        </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="container mx-auto px-4 py-8 flex-grow max-w-6xl">
+        <div class="mb-8">
+            <h1 class="text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight flex items-center">
+                <i class="fas fa-shopping-bag text-blue-500 mr-3"></i> ตะกร้าสินค้าของคุณ
+            </h1>
+        </div>
+
+        <div id="cartContent" class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Items List Section -->
+            <div class="w-full lg:w-2/3">
+                <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 p-6">
+                    <div id="cartItemsContainer" class="divide-y divide-slate-100">
+                        <!-- JS WILL INJECT ITEMS HERE -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary Sidebar -->
+            <div class="w-full lg:w-1/3">
+                <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 p-6 sticky top-28">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6 border-b border-slate-100 pb-4">สรุปคำสั่งซื้อ</h2>
+                    
+                    <div class="space-y-4 mb-6 text-slate-600">
+                        <div class="flex justify-between">
+                            <span class="font-light">ยอดรวมสินค้า (<span id="summaryItemCount">0</span> ชิ้น)</span>
+                            <span class="font-medium">฿<span id="summarySubtotal">0</span></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-light">ค่าจัดส่ง (เริ่มต้น)</span>
+                            <span class="font-medium">฿<span id="summaryShipping">50</span></span>
+                        </div>
+                        <div class="border-t border-slate-100 pt-4 flex justify-between items-end mt-4">
+                            <span class="font-medium text-slate-800 text-lg">ยอดชำระสุทธิ</span>
+                            <span class="text-2xl font-bold text-blue-600">฿<span id="summaryTotal">0</span></span>
+                        </div>
+                    </div>
+
+                    <button onclick="openPaymentModal()" class="w-full bg-[#00ce00] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:bg-[#00ba00] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center space-x-2 text-lg mb-4">
+                        <i class="fab fa-line text-2xl"></i>
+                        <span>ดำเนินการชำระเงิน</span>
+                    </button>
+                    
+                    <a href="products.html" class="w-full block text-center text-blue-600 font-medium py-3 rounded-xl border border-blue-100 hover:bg-blue-50 transition-colors duration-300">
+                        เลือกซื้อสินค้าเพิ่ม
+                    </a>
+                    
+                    <div class="mt-6 flex items-center justify-center space-x-3 text-slate-400 text-sm">
+                        <i class="fas fa-lock text-sm"></i>
+                        <span>การสั่งซื้อปลอดภัย 100%</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Empty State (Hidden initially) -->
+        <div id="emptyCartState" class="hidden flex flex-col items-center justify-center bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 py-20 px-4 text-center">
+            <div class="w-32 h-32 mb-6 text-slate-200">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-medium text-slate-800 mb-2">ตะกร้าสินค้าของคุณว่างเปล่า</h2>
+            <p class="text-slate-500 font-light mb-8 max-w-md">ดูเหมือนว่าคุณยังไม่ได้เลือกสินค้าใดๆ ลงในตะกร้า ลองเลือกดูสินค้าอะไหล่คุณภาพของเราก่อนสิครับ</p>
+            <a href="products.html" class="bg-blue-600 text-white font-medium py-3 px-8 rounded-full shadow-md hover:shadow-lg hover:bg-blue-700 hover:-translate-y-0.5 transition-all duration-300 inline-flex items-center">
+                กลับไปเลือกซื้อสินค้า <i class="fas fa-arrow-right ml-2 text-sm"></i>
+            </a>
+        </div>
+
+        <!-- Payment Modal (Hidden by default) -->
+        <div id="paymentModal" class="fixed inset-0 z-[100] bg-gray-900/60 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+            <div class="bg-white rounded-[24px] sm:rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all flex flex-col max-h-[92vh]">
+                <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-600 relative py-4 px-5 shrink-0 shadow-sm flex justify-between items-center">
+                    <h3 class="text-lg md:text-xl font-bold text-white tracking-wide flex items-center">
+                        <i class="fas fa-wallet text-blue-200 mr-2.5 text-xl md:text-2xl"></i>แจ้งชำระเงิน
+                    </h3>
+                    <button onclick="closePaymentModal()" class="text-blue-200 hover:text-white transition bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/50">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+                
+                <div class="p-4 md:p-6 overflow-y-auto">
+                    <!-- Order ID & Timer -->
+                    <div class="flex justify-between items-center bg-blue-50/70 p-3 rounded-xl border border-blue-100 mb-4 sm:mb-5">
+                        <div>
+                            <div class="text-[10px] md:text-xs text-slate-500 font-medium uppercase tracking-widest">หมายเลขคำสั่งซื้อ</div>
+                            <div class="font-bold text-blue-900 text-sm md:text-base tracking-wide" id="payOrderId">TF-PAY-XXXX</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] md:text-xs text-slate-500 font-medium">ทำรายการภายใน</div>
+                            <div class="font-bold text-red-500 text-base md:text-lg flex items-center justify-end"><i class="far fa-clock mr-1.5 animate-pulse"></i><span id="payTimer">15:00</span></div>
+                        </div>
+                    </div>
+
+                    <!-- QR Code & Total -->
+                    <div class="text-center mb-4 sm:mb-5 pb-4 sm:pb-5 border-b border-slate-100">
+                        <div class="text-2xl md:text-3xl font-black text-blue-900 mb-2 md:mb-3 tracking-tight">฿<span id="payTotal">0</span></div>
+                        <div class="bg-white border rounded-2xl p-2.5 inline-block shadow-[0_8px_30px_rgb(59,130,246,0.15)] mb-3 relative group transition duration-300 hover:shadow-[0_8px_30px_rgb(59,130,246,0.25)]">
+                            <img id="qrCodeImage" src="" alt="PromptPay QR Code" class="w-40 h-40 sm:w-48 sm:h-48 object-contain mx-auto mix-blend-multiply transition-transform duration-300 group-hover:scale-105">
+                        </div>
+                        <div class="text-center mb-4">
+                            <a id="downloadQrBtn" href="#" download="promptpay-qr.png" class="inline-flex items-center justify-center text-xs md:text-sm text-blue-600 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-full font-medium transition-colors border border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 shadow-sm">
+                                <i class="fas fa-download mr-1.5"></i>บันทึกรูปภาพ QR
+                            </a>
+                        </div>
+                        
+                        <div class="flex flex-col items-center justify-center text-slate-600 bg-slate-50 border border-slate-100 mx-1 sm:mx-4 py-3 px-3 rounded-xl relative shadow-sm">
+                            <div class="font-bold text-blue-900 text-sm md:text-base flex items-center mb-1.5">
+                                <span class="bg-blue-900 text-white text-[10px] px-2 py-0.5 rounded mr-1.5 uppercase tracking-widest font-black">PromptPay</span> พร้อมเพย์
+                            </div>
+                            <div class="flex items-center justify-center space-x-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm mb-1.5 relative w-full max-w-[240px]">
+                                <span class="font-bold text-slate-800 text-base md:text-lg tracking-wide">082-805-7662</span>
+                                <button onclick="copyPromptPay()" class="text-blue-500 hover:text-blue-700 transition ml-2 w-7 h-7 flex items-center justify-center rounded-md hover:bg-blue-50 focus:outline-none relative group" title="คัดลอกหมายเลข">
+                                    <i class="far fa-copy text-base group-hover:scale-110 transition-transform"></i>
+                                    <span id="copyToast" class="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded flex items-center opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-md"><i class="fas fa-check text-green-400 mr-1 text-[10px]"></i>คัดลอกแล้ว</span>
+                                </button>
+                            </div>
+                            <div class="flex items-center space-x-1.5 text-xs md:text-sm">
+                                <span class="text-slate-500">ชื่อบัญชี:</span>
+                                <span class="font-semibold text-blue-900">นาย โชคทวี ตันตระกลู</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slip Upload -->
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-slate-800 font-semibold text-sm md:text-base drop-shadow-sm"><i class="fas fa-file-invoice-dollar text-blue-600 mr-2"></i>หลักฐานการโอนเงิน</label>
+                            <span class="text-[9px] md:text-[10px] bg-red-50 text-red-500 px-2 py-0.5 rounded font-medium border border-red-100">*จำเป็น</span>
+                        </div>
+                        <div class="relative border-2 border-dashed border-blue-200 rounded-xl p-3 sm:p-4 hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-300 text-center cursor-pointer group bg-slate-50/50 mt-1" onclick="document.getElementById('slipInput').click()">
+                            <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="previewSlip(event)">
+                            <div id="slipPlaceholder" class="py-1 md:py-2">
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-2 md:mb-3">
+                                    <i class="fas fa-cloud-upload-alt text-xl md:text-2xl text-blue-500 group-hover:text-blue-600 transition-colors transform animate-bounce group-hover:scale-110 duration-300"></i>
+                                </div>
+                                <div class="text-xs md:text-sm font-medium text-blue-700 decoration-blue-300 underline-offset-4 group-hover:underline">แตะเพื่ออัปโหลดสลิป</div>
+                                <div class="text-[10px] md:text-xs text-slate-400 mt-1">รองรับไฟล์รูปภาพ JPG, PNG</div>
+                            </div>
+                            <div id="slipPreviewContainer" class="hidden flex flex-col items-center relative w-full">
+                                <div class="relative w-full max-w-[200px] aspect-[1/1.5] rounded-lg overflow-hidden border border-slate-200 shadow-md mb-2 group-hover:border-blue-300 transition-colors mx-auto bg-white flex items-center justify-center">
+                                    <img id="slipPreview" src="" class="w-full h-full object-contain">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+                                        <span class="text-white text-xs font-medium border border-white/50 px-3 py-1.5 rounded-full bg-black/30"><i class="fas fa-sync-alt mr-1.5"></i>เปลี่ยนรูปภาพ</span>
+                                    </div>
+                                </div>
+                                <div class="text-[10px] md:text-xs text-green-600 font-medium bg-green-50 px-3 py-1.5 rounded-full inline-flex items-center border border-green-100 shadow-sm"><i class="fas fa-check-circle mr-1.5"></i>แนบสลิปสำเร็จ</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trust Badges -->
+                    <div class="flex justify-center items-center gap-3 text-slate-500 text-[9px] md:text-[11px] font-medium pt-1">
+                        <div class="flex items-center bg-green-50 px-2 py-1 rounded text-green-700 border border-green-100"><i class="fas fa-shield-alt text-green-600 mr-1.5 text-xs"></i>ปลอดภัย 100%</div>
+                        <div class="flex items-center bg-blue-50 px-2 py-1 rounded text-blue-700 border border-blue-100"><i class="fas fa-certificate text-blue-600 mr-1.5 text-xs"></i>มาตรฐานโดยช่างผู้เชี่ยวชาญ</div>
+                    </div>
+                </div>
+
+                <!-- Footer Action -->
+                <div class="p-3 md:p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-4px_15px_rgba(0,0,0,0.02)]">
+                    <button onclick="confirmPaymentAndNotifyLine()" class="w-full bg-[#00c300] text-white font-bold py-3.5 md:py-4 rounded-xl shadow-[0_4px_15px_rgba(0,195,0,0.3)] hover:shadow-[0_6px_20px_rgba(0,195,0,0.4)] hover:bg-[#00b300] active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 text-base md:text-lg focus:outline-none focus:ring-4 focus:ring-green-500/30">
+                        <i class="fab fa-line text-2xl md:text-3xl drop-shadow-sm"></i>
+                        <span class="drop-shadow-sm tracking-wide">แจ้งโอนเงินผ่าน Line ทันที</span>
+                    </button>
+                    <div class="text-center mt-2 md:mt-2.5">
+                        <p class="text-[9px] md:text-[10px] text-slate-400 font-light">ระบบจะพาท่านไปยังแอปพลิเคชัน Line ทันที</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Simple -->
+    <footer class="bg-gray-900 mt-auto text-gray-400 py-8 px-4 text-center text-sm border-t-4 border-blue-600">
+        <div class="space-y-2">
+            <p>&copy; 2026 TechFix Center. สงวนลิขสิทธิ์ทั้งหมด.</p>
+            <p>Produced by <a href="https://kimx-wed.vercel.app/" target="_blank" class="text-blue-500 hover:text-blue-400 hover:brightness-110 transition-all duration-300 font-medium">kimxwed</a></p>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="assets/js/script.js"></script>
+
+    <!-- Cart Page Specific Logic -->
+    <script>
+        // Navbar Mobile Toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    const icon = btn.querySelector('i');
+                    if(menu.classList.contains('hidden')) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    } else {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                });
+            }
+            // Initial render
+            renderCartItems();
+        });
+
+        // Function to render items
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsContainer');
+            const mainContent = document.getElementById('cartContent');
+            const emptyState = document.getElementById('emptyCartState');
+            
+            container.innerHTML = '';
+            
+            if (cart.length === 0) {
+                mainContent.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                mainContent.classList.remove('hidden');
+                mainContent.classList.add('flex');
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+                
+                cart.forEach(item => {
+                    const priceFormatted = new Intl.NumberFormat('th-TH').format(item.price);
+                    const totalFormatted = new Intl.NumberFormat('th-TH').format(item.price * item.quantity);
+                    
+                    container.innerHTML += `
+                        <div class="py-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 group">
+                            <!-- Product Image -->
+                            <div class="w-full sm:w-24 h-24 bg-slate-50 rounded-xl overflow-hidden shrink-0 border border-slate-100 flex items-center justify-center p-2">
+                                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover rounded-md group-hover:scale-110 transition-transform duration-300">
+                            </div>
+                            
+                            <!-- Product Info -->
+                            <div class="flex-grow flex flex-col w-full">
+                                <div class="text-xs text-slate-400 mb-1 font-light uppercase tracking-wider">${item.category}</div>
+                                <h3 class="text-base font-medium text-slate-800 leading-snug line-clamp-2">${item.title}</h3>
+                                <div class="text-sm font-semibold text-blue-600 mt-1">฿${priceFormatted}</div>
+                            </div>
+                            
+                            <!-- Quantity & Action -->
+                            <div class="flex items-center justify-between w-full sm:w-auto mt-4 sm:mt-0 gap-6">
+                                <!-- Qty Selector -->
+                                <div class="flex items-center border border-slate-200 rounded-lg bg-slate-50 h-10 shrink-0">
+                                    <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" class="px-3 text-slate-500 hover:text-blue-600 transition-colors focus:outline-none"><i class="fas fa-minus text-xs"></i></button>
+                                    <input type="text" value="${item.quantity}" class="w-10 text-center font-medium text-slate-800 outline-none bg-transparent" readonly>
+                                    <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" class="px-3 text-slate-500 hover:text-blue-600 transition-colors focus:outline-none"><i class="fas fa-plus text-xs"></i></button>
+                                </div>
+                                
+                                <div class="text-lg font-bold text-slate-800 min-w-[70px] text-right hidden sm:block shrink-0">
+                                    ฿${totalFormatted}
+                                </div>
+                                
+                                <!-- Delete Btn -->
+                                <button onclick="removeFromCart('${item.id}')" class="w-8 h-8 flex items-center justify-center rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors focus:outline-none shrink-0" title="ลบสินค้า">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                updateSummary();
+            }
+            
+            // Just be safe and trigger badge global update again
+            updateCartBadge();
+        }
+
+        // Function to update the order summary section
+        function updateSummary() {
+            const subtotal = getCartSubtotal();
+            const totalItems = getCartTotalItems();
+            const shipping = subtotal > 0 ? 50 : 0; // Simple logic: 50 THB shipping flat rate if cart not empty
+            
+            document.getElementById('summaryItemCount').textContent = totalItems;
+            document.getElementById('summarySubtotal').textContent = new Intl.NumberFormat('th-TH').format(subtotal);
+            document.getElementById('summaryShipping').textContent = shipping;
+            document.getElementById('summaryTotal').textContent = new Intl.NumberFormat('th-TH').format(subtotal + shipping);
+        }
+
+        // QR & Payment Modal Logic
+        let countdownInterval;
+
+        function openPaymentModal() {
+            if (cart.length === 0) return;
+            
+            const subtotal = getCartSubtotal();
+            const total = subtotal + 50; // Shipping
+
+            // Generate Order ID
+            const randomCode = Math.floor(1000 + Math.random() * 9000);
+            const orderId = `TF-PAY-${randomCode}`;
+            document.getElementById('payOrderId').textContent = orderId;
+            document.getElementById('payOrderId').dataset.id = orderId;
+
+            // Update Total
+            document.getElementById('payTotal').textContent = new Intl.NumberFormat('th-TH').format(total);
+
+            // Generate QA Code (dynamic PromptPay.io usage)
+            const promptPayNumber = "0828057662";
+            const qrUrl = `https://promptpay.io/${promptPayNumber}/${total}.png`;
+            document.getElementById('qrCodeImage').src = qrUrl;
+            document.getElementById('downloadQrBtn').href = qrUrl;
+
+            // Reset slip viewer states
+            document.getElementById('slipInput').value = '';
+            document.getElementById('slipPlaceholder').classList.remove('hidden');
+            document.getElementById('slipPreviewContainer').classList.add('hidden');
+            document.getElementById('slipPreview').src = '';
+
+            // Timer Logic (15 Mins)
+            clearInterval(countdownInterval);
+            let timeLeft = 15 * 60;
+            const timerEl = document.getElementById('payTimer');
+            countdownInterval = setInterval(() => {
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                timerEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                if(timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    timerEl.textContent = "หมดเวลา";
+                }
+                timeLeft--;
+            }, 1000);
+
+            // Show UI
+            const modal = document.getElementById('paymentModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // Scroll modal to top if it isn't
+            modal.querySelector('.overflow-y-auto').scrollTop = 0;
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            clearInterval(countdownInterval);
+        }
+
+        function copyPromptPay() {
+            navigator.clipboard.writeText("0828057662").then(() => {
+                const toast = document.getElementById('copyToast');
+                toast.classList.remove('opacity-0');
+                toast.classList.add('opacity-100');
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100');
+                    toast.classList.add('opacity-0');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text', err);
+            });
+        }
+
+        function previewSlip(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('slipPreview').src = e.target.result;
+                    document.getElementById('slipPlaceholder').classList.add('hidden');
+                    document.getElementById('slipPreviewContainer').classList.remove('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Checkout Function -> Redirect to Line with Slip Info
+        function confirmPaymentAndNotifyLine() {
+            if (cart.length === 0) return;
+            
+            const slipHasFile = document.getElementById('slipInput').files.length > 0;
+            if (!slipHasFile) {
+                const confirmNoSlip = confirm('คุณยังไม่ได้อัปโหลดสลิป ยืนยันที่จะแจ้งยอดผ่าน Line ใช่หรือไม่? (สามารถส่งภาพสลิปในแชททีหลังได้)');
+                if(!confirmNoSlip) return;
+            }
+
+            const subtotal = getCartSubtotal();
+            const shipping = 50;
+            const total = subtotal + shipping;
+            const orderId = document.getElementById('payOrderId').dataset.id || 'TF-PAY-XXXX';
+            
+            let message = `🛍️ *แจ้งชำระเงิน | รหัสคำสั่งซื้อ: ${orderId}*\\n\\n`;
+            message += `*รายการสินค้าที่สั่ง:*\\n`;
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.title}\\n`;
+                message += `คุณสมบัติ: ${item.category} | จำนวน: ${item.quantity} ชิ้น\\n`;
+                message += `ราคา: ${new Intl.NumberFormat('th-TH').format(item.price * item.quantity)} บาท\\n\\n`;
+            });
+            
+            message += `*ยอดรวมสินค้า:* ${new Intl.NumberFormat('th-TH').format(subtotal)} บาท\\n`;
+            message += `*ค่าจัดส่ง (เริ่มต้น):* ${shipping} บาท\\n`;
+            message += `*ยอดสุทธิที่ต้องชำระ: ${new Intl.NumberFormat('th-TH').format(total)} บาท*\\n\\n`;
+            message += `✅ ลูกค้ากดดำเนินการชำระเงินผ่านระบบเรียบร้อยแล้ว\\n\\n`;
+            message += `📸 *(สำคัญ)* เนื่องจากข้อจำกัดของระบบ ลูกค้าโปรดกดส่งรูปสลิปในแชทนี้อีกครั้งเพื่อให้ช่างตรวจสอบและจัดส่งสินค้าได้อย่างรวดเร็ว ขอบคุณครับ`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const lineUrl = `https://line.me/ti/p/~supergetfood?text=${encodedMessage}`;
+            
+            window.open(lineUrl, '_blank');
+            closePaymentModal();
+            
+            // Note: We don't automatically flush the cart here as the user might bounce back or change mind, 
+            // relying on them to manually remove or clear if they succeed.
+        }
+    </script>
+</body>
+</html>
