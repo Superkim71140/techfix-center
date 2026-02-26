@@ -36,11 +36,16 @@
                     <img src="assets/images/logo-transparent.png" alt="Logo" class="h-14 md:h-16 lg:h-20 object-contain">
                 </a>
                 
-                <!-- Mobile Menu Button -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none p-2 rounded-lg bg-gray-50 border border-gray-100">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
+                <div class="flex items-center space-x-4 md:hidden">
+                    <a href="cart.html" class="relative cursor-pointer text-blue-600 transition">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm transition-transform duration-300" style="display: none;">0</span>
+                    </a>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-blue-600 focus:outline-none p-2 rounded-lg bg-gray-50 border border-gray-100">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
 
             <!-- Search Bar (Full width on mobile, inline on desktop) -->
             <div class="flex-1 w-full md:max-w-xl md:mx-4 relative order-3 md:order-none">
