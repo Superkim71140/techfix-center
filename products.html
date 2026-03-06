@@ -14,6 +14,15 @@
         .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 300ms, transform 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28); }
         .modal-overlay-enter { opacity: 0; }
         .modal-overlay-enter-active { opacity: 1; transition: opacity 300ms; }
+        /* GPU Acceleration for Cards */
+        .product-card {
+            will-change: transform, box-shadow;
+        }
+        /* Image Skeleton Loading Classes */
+        .skeleton-loading {
+            background-color: #e2e8f0;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
     </style>
 </head>
 
@@ -42,7 +51,7 @@
 
             <!-- Search Bar (Full width on mobile, inline on desktop) -->
             <div class="flex-1 w-full md:max-w-xl md:mx-4 relative order-3 md:order-none">
-                <input type="text" placeholder="ค้นหาอะไหล่, หน้าจอ, แบตเตอรี่, เครื่องมือ..." 
+                <input type="text" id="searchInput" placeholder="ค้นหาอะไหล่, หน้าจอ, แบตเตอรี่, เครื่องมือ..." 
                     class="w-full bg-blue-50 border border-blue-200 text-gray-700 py-2.5 md:py-2 px-4 pl-11 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-sm text-sm md:text-base">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <i class="fas fa-search text-blue-400"></i>
@@ -92,26 +101,32 @@
                     <ul class="space-y-3">
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-category" value="screens">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">หน้าจอ (Screens)</span>
                             </label>
                         </li>
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-category" value="batteries">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">แบตเตอรี่ (Batteries)</span>
                             </label>
                         </li>
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-category" value="tools">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">เครื่องมือช่าง (Tools)</span>
                             </label>
                         </li>
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-category" value="accessories">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">อุปกรณ์เสริม (Accessories)</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center space-x-3 cursor-pointer group">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-category" value="smartphones">
+                                <span class="text-slate-600 group-hover:text-blue-600 transition font-light">สมาร์ทโฟน (Smartphones)</span>
                             </label>
                         </li>
                     </ul>
@@ -125,32 +140,38 @@
                     <ul class="space-y-3">
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-brand" value="apple">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">Apple</span>
                             </label>
                         </li>
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-brand" value="samsung">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">Samsung</span>
                             </label>
                         </li>
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-brand" value="oppo">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">Oppo</span>
                             </label>
                         </li>
                         <li>
                             <label class="flex items-center space-x-3 cursor-pointer group">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-brand" value="vivo">
                                 <span class="text-slate-600 group-hover:text-blue-600 transition font-light">Vivo</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center space-x-3 cursor-pointer group">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 filter-brand" value="xiaomi">
+                                <span class="text-slate-600 group-hover:text-blue-600 transition font-light">Xiaomi</span>
                             </label>
                         </li>
                     </ul>
                 </div>
                 
-                <button class="w-full mt-6 bg-blue-50 text-blue-600 font-medium py-3 rounded-xl hover:bg-blue-100 transition border border-blue-100">
+                <button id="clearFiltersBtn" class="w-full mt-6 bg-blue-50 text-blue-600 font-medium py-3 rounded-xl hover:bg-blue-100 transition border border-blue-100">
                     ล้างตัวกรอง
                 </button>
             </div>
@@ -172,158 +193,8 @@
             </div>
 
             <!-- 4 Column Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                
-                <!-- Product Card 1 -->
-                <div class="product-card bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 ease-in-out border border-slate-100 overflow-hidden flex flex-col group">
-                    <div class="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer" onclick="openProductModal('iphone13-screen')">
-                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-blue-100 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-lg z-10 shadow-sm">Apple</span>
-                        <span class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg z-10 shadow-sm animate-pulse">HOT</span>
-                        <img src="assets/images/Screen IPHONE 13 3.webp" alt="iPhone 13 Screen" class="product-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out">
-                        <!-- Quick Add Overlay -->
-                        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button class="bg-white text-blue-600 font-medium py-2.5 px-5 rounded-full shadow-lg hover:bg-blue-50 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
-                                <i class="fas fa-search-plus"></i> ดูรายละเอียด
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-grow flex flex-col">
-                        <div class="text-xs text-slate-400 mb-1.5 font-light uppercase tracking-wide">หน้าจอ (Screens)</div>
-                        <h3 class="font-medium text-slate-800 leading-snug mb-3 hover:text-blue-600 cursor-pointer transition-colors" onclick="openProductModal('iphone13-screen')">หน้าจอแท้ iPhone 13 (OLED Display)</h3>
-                        <div class="mt-auto flex items-end justify-between">
-                            <div>
-                                <span class="text-xs text-slate-400 line-through font-light">฿3,500</span>
-                                <div class="text-xl font-semibold text-blue-600">฿2,990</div>
-                            </div>
-                            <button onclick="addToCart({id: 'iphone13-screen', title: productDatabase['iphone13-screen'].title, price: 2990, image: productDatabase['iphone13-screen'].images[0], category: productDatabase['iphone13-screen'].category})" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-sm hover:bg-blue-700 hover:shadow-md hover:scale-105 hover:brightness-110 transition-all duration-300 transform hover:-translate-y-0.5">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 2 -->
-                <div class="product-card bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 ease-in-out border border-slate-100 overflow-hidden flex flex-col group">
-                    <div class="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer" onclick="openProductModal('s22-ultra-screen')">
-                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-blue-100 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-lg z-10 shadow-sm">Samsung</span>
-                        <img src="https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?auto=format&fit=crop&w=400&q=80" alt="S22 Ultra Screen" class="product-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out">
-                        <!-- Quick Add Overlay -->
-                        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button class="bg-white text-blue-600 font-medium py-2.5 px-5 rounded-full shadow-lg hover:bg-blue-50 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
-                                <i class="fas fa-search-plus"></i> ดูรายละเอียด
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-grow flex flex-col">
-                        <div class="text-xs text-slate-400 mb-1.5 font-light uppercase tracking-wide">หน้าจอ (Screens)</div>
-                        <h3 class="font-medium text-slate-800 leading-snug mb-3 hover:text-blue-600 cursor-pointer transition-colors" onclick="openProductModal('s22-ultra-screen')">หน้าจอแท้ Samsung Galaxy S22 Ultra พร้อมกรอบ</h3>
-                        <div class="mt-auto flex items-end justify-between">
-                            <div class="text-xl font-semibold text-blue-600">฿8,500</div>
-                            <button onclick="addToCart({id: 's22-ultra-screen', title: productDatabase['s22-ultra-screen'].title, price: 8500, image: productDatabase['s22-ultra-screen'].image, category: productDatabase['s22-ultra-screen'].category})" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-sm hover:bg-blue-700 hover:shadow-md hover:scale-105 hover:brightness-110 transition-all duration-300 transform hover:-translate-y-0.5">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 3 -->
-                <div class="product-card bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 ease-in-out border border-slate-100 overflow-hidden flex flex-col group">
-                    <div class="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer" onclick="openProductModal('iphone11-battery')">
-                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-blue-100 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-lg z-10 shadow-sm">Apple</span>
-                        <span class="absolute top-3 right-3 bg-blue-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg z-10 shadow-sm">ขายดี</span>
-                        <img src="https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=400&q=80" alt="iPhone 11 Battery" class="product-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out">
-                        <!-- Quick Add Overlay -->
-                        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button class="bg-white text-blue-600 font-medium py-2.5 px-5 rounded-full shadow-lg hover:bg-blue-50 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
-                                <i class="fas fa-search-plus"></i> ดูรายละเอียด
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-grow flex flex-col">
-                        <div class="text-xs text-slate-400 mb-1.5 font-light uppercase tracking-wide">แบตเตอรี่ (Batteries)</div>
-                        <h3 class="font-medium text-slate-800 leading-snug mb-3 hover:text-blue-600 cursor-pointer transition-colors" onclick="openProductModal('iphone11-battery')">แบตเตอรี่ iPhone 11 (ความจุเต็ม 100%) เกรด A</h3>
-                        <div class="mt-auto flex items-end justify-between">
-                            <div class="text-xl font-semibold text-blue-600">฿650</div>
-                            <button onclick="addToCart({id: 'iphone11-battery', title: productDatabase['iphone11-battery'].title, price: 650, image: productDatabase['iphone11-battery'].image, category: productDatabase['iphone11-battery'].category})" class="bg-blue-50 text-blue-600 border border-blue-200 w-10 h-10 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white hover:scale-105 hover:brightness-110 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 4 -->
-                <div class="product-card bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 ease-in-out border border-slate-100 overflow-hidden flex flex-col group">
-                    <div class="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer" onclick="openProductModal('a54-battery')">
-                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-blue-100 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-lg z-10 shadow-sm">Samsung</span>
-                        <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=400&q=80" alt="A54 Battery" class="product-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out">
-                        <!-- Quick Add Overlay -->
-                        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button class="bg-white text-blue-600 font-medium py-2.5 px-5 rounded-full shadow-lg hover:bg-blue-50 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
-                                <i class="fas fa-search-plus"></i> ดูรายละเอียด
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-grow flex flex-col">
-                        <div class="text-xs text-slate-400 mb-1.5 font-light uppercase tracking-wide">แบตเตอรี่ (Batteries)</div>
-                        <h3 class="font-medium text-slate-800 leading-snug mb-3 hover:text-blue-600 cursor-pointer transition-colors" onclick="openProductModal('a54-battery')">แบตเตอรี่ Samsung Galaxy A54 5G (5000mAh) แท้ศูนย์</h3>
-                        <div class="mt-auto flex items-end justify-between">
-                            <div class="text-xl font-semibold text-blue-600">฿850</div>
-                            <button onclick="addToCart({id: 'a54-battery', title: productDatabase['a54-battery'].title, price: 850, image: productDatabase['a54-battery'].image, category: productDatabase['a54-battery'].category})" class="bg-blue-50 text-blue-600 border border-blue-200 w-10 h-10 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white hover:scale-105 hover:brightness-110 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product Card 5 -->
-                <div class="product-card bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 ease-in-out border border-slate-100 overflow-hidden flex flex-col group">
-                    <div class="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer" onclick="openProductModal('tools-set-1')">
-                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-purple-100 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-lg z-10 shadow-sm">Tools</span>
-                        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=400&q=80" alt="Screwdriver Set" class="product-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out">
-                        <!-- Quick Add Overlay -->
-                        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button class="bg-white text-blue-600 font-medium py-2.5 px-5 rounded-full shadow-lg hover:bg-blue-50 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
-                                <i class="fas fa-search-plus"></i> ดูรายละเอียด
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-grow flex flex-col">
-                        <div class="text-xs text-slate-400 mb-1.5 font-light uppercase tracking-wide">เครื่องมือช่าง (Tools)</div>
-                        <h3 class="font-medium text-slate-800 leading-snug mb-3 hover:text-blue-600 cursor-pointer transition-colors" onclick="openProductModal('tools-set-1')">ชุดไขควงซ่อมมือถือ 24 in 1 แม่เหล็กแรงสููง</h3>
-                        <div class="mt-auto flex items-end justify-between">
-                            <div class="text-xl font-semibold text-blue-600">฿350</div>
-                            <button onclick="addToCart({id: 'tools-set-1', title: productDatabase['tools-set-1'].title, price: 350, image: productDatabase['tools-set-1'].image, category: productDatabase['tools-set-1'].category})" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-sm hover:bg-blue-700 hover:shadow-md hover:scale-105 hover:brightness-110 transition-all duration-300 transform hover:-translate-y-0.5">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 6 -->
-                <div class="product-card bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 ease-in-out border border-slate-100 overflow-hidden flex flex-col group">
-                    <div class="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer" onclick="openProductModal('tools-heatgun')">
-                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-purple-100 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-lg z-10 shadow-sm">Tools</span>
-                        <!-- Using generic tech photo for tool -->
-                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80" alt="Heat Gun" class="product-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out">
-                        <!-- Quick Add Overlay -->
-                        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button class="bg-white text-blue-600 font-medium py-2.5 px-5 rounded-full shadow-lg hover:bg-blue-50 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
-                                <i class="fas fa-search-plus"></i> ดูรายละเอียด
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-grow flex flex-col">
-                        <div class="text-xs text-slate-400 mb-1.5 font-light uppercase tracking-wide">เครื่องมือช่าง (Tools)</div>
-                        <h3 class="font-medium text-slate-800 leading-snug mb-3 hover:text-blue-600 cursor-pointer transition-colors" onclick="openProductModal('tools-heatgun')">เครื่องเป่าลมร้อนสำหรับลอกหน้าจอมือถือ</h3>
-                        <div class="mt-auto flex items-end justify-between">
-                            <div class="text-xl font-semibold text-blue-600">฿1,200</div>
-                            <button onclick="addToCart({id: 'tools-heatgun', title: productDatabase['tools-heatgun'].title, price: 1200, image: productDatabase['tools-heatgun'].image, category: productDatabase['tools-heatgun'].category})" class="bg-blue-50 text-blue-600 border border-blue-200 w-10 h-10 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white hover:scale-105 hover:brightness-110 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Products will be generated dynamically -->
             </div>
 
             <!-- Pagination -->
@@ -391,8 +262,9 @@
                 <span id="modalBrand" class="absolute top-6 left-6 bg-white/90 backdrop-blur-sm border border-blue-100 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg z-10 shadow-sm tracking-wide">Brand</span>
                 
                 <!-- Main Image -->
-                <div class="w-full flex-grow flex items-center justify-center overflow-hidden mb-4 group mt-10 md:mt-0">
-                    <img id="modalImage" src="" alt="Product" class="w-full h-auto max-h-[250px] md:max-h-[400px] object-contain group-hover:scale-110 transition-all duration-300">
+                <div class="w-full flex-grow flex items-center justify-center overflow-hidden mb-4 group mt-10 md:mt-0 relative">
+                    <div class="skeleton-wrapper w-full h-full skeleton-loading absolute inset-0 z-0 rounded-xl"></div>
+                    <img id="modalImage" src="" alt="Product" loading="lazy" onload="this.previousElementSibling.style.display='none';" class="w-full h-auto max-h-[250px] md:max-h-[400px] object-contain group-hover:scale-110 transition-all duration-300 relative z-10 opacity-0 transition-opacity" style="opacity: 1;">
                 </div>
 
                 <!-- Thumbnails Strip -->
@@ -475,25 +347,8 @@
                 <!-- Related Products Mini -->
                 <div class="mt-10 pt-6 border-t border-gray-100">
                     <h4 class="text-sm font-semibold text-slate-800 tracking-wide mb-4">สินค้าที่เกี่ยวข้อง (Related Products)</h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="border border-slate-100 rounded-xl p-3 flex items-center space-x-3 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer group" onclick="openProductModal('iphone11-battery')">
-                            <div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
-                                <img src="https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
-                            </div>
-                            <div>
-                                <div class="text-xs text-slate-800 font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">แบตเตอรี่ iPhone 11</div>
-                                <div class="text-xs text-blue-600 font-semibold mt-0.5">฿650</div>
-                            </div>
-                        </div>
-                        <div class="border border-slate-100 rounded-xl p-3 flex items-center space-x-3 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer group" onclick="openProductModal('tools-set-1')">
-                            <div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
-                                <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
-                            </div>
-                            <div>
-                                <div class="text-xs text-slate-800 font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">ชุดไขควง 24 in 1</div>
-                                <div class="text-xs text-blue-600 font-semibold mt-0.5">฿350</div>
-                            </div>
-                        </div>
+                    <div id="modalRelatedProducts" class="grid grid-cols-2 gap-4">
+                        <!-- Dynamic content injected here -->
                     </div>
                 </div>
 
@@ -503,90 +358,102 @@
 
     <!-- Product Data & Modal Logic -->
     <script>
-        const productDatabase = {
-            'iphone13-screen': {
-                brand: 'Apple',
-                category: 'หน้าจอ (Screens)',
-                title: 'หน้าจอแท้ iPhone 13 (OLED Display)',
-                desc: 'หน้าจอ OLED แท้ศูนย์ ความสว่างและสีสัน 100% เท่าของเดิมโรงงาน ทัชสกรีนลื่นไหลไม่มีสะดุด',
-                price: '฿2,990',
-                oldPrice: '฿3,500',
-                images: [
-                    'assets/images/Screen IPHONE 13.webp',
-                    'assets/images/Screen IPHONE 13 1.webp',
-                    'assets/images/Screen IPHONE 13 3.webp'
-                ],
-                warranty: 'ประกัน 6 เดือน (เปลี่ยนใหม่ทันทีหากมีปัญหา)',
-                grade: 'อะไหล่แท้ (Original OLED)',
-                compat: 'iPhone 13 (ไม่รองรับ Pro/Pro Max)',
-                badge: 'HOT SALE'
-            },
-            's22-ultra-screen': {
-                brand: 'Samsung',
-                category: 'หน้าจอ (Screens)',
-                title: 'หน้าจอแท้ Samsung Galaxy S22 Ultra พร้อมกรอบ',
-                desc: 'หน้าจอ Dynamic AMOLED 2X แท้พร้อมเฟรมกลาง ติดตั้งง่าย สีสันคมชัด 120Hz ทำงานเต็มระบบ',
-                price: '฿8,500',
-                oldPrice: null,
-                image: 'https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?auto=format&fit=crop&w=800&q=80',
-                warranty: 'ประกัน 6 เดือน',
-                grade: 'อะไหล่แท้ (Service Pack)',
-                compat: 'Samsung Galaxy S22 Ultra (SM-S908)',
-                badge: null
-            },
-            'iphone11-battery': {
-                brand: 'Apple',
-                category: 'แบตเตอรี่ (Batteries)',
-                title: 'แบตเตอรี่ iPhone 11 (ความจุเต็ม 100%) เกรด A',
-                desc: 'แบตเตอรี่ มอก. ความจุ 3110 mAh ทนทาน ปลอดภัย รองรับ Fast Charge ชาร์จได้ตามปกติ',
-                price: '฿650',
-                oldPrice: null,
-                image: 'https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=800&q=80',
-                warranty: 'ประกัน 1 ปี เต็ม',
-                grade: 'เกรดเทียบแท้ มอก. (Premium Grade)',
-                compat: 'iPhone 11 (A2111, A2221, A2223)',
-                badge: 'ขายดี'
-            },
-            'a54-battery': {
-                brand: 'Samsung',
-                category: 'แบตเตอรี่ (Batteries)',
-                title: 'แบตเตอรี่ Samsung Galaxy A54 5G (5000mAh) แท้ศูนย์',
-                desc: 'แบตแท้เบิกศูนย์ ความจุเต็ม 5000mAh แก้ปัญหาแบตบวม เครื่องดับบ่อย ใช้งานได้เกือบ 2 วัน',
-                price: '฿850',
-                oldPrice: null,
-                image: 'https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=800&q=80',
-                warranty: 'ประกัน 6 เดือน (ของแท้ศูนย์)',
-                grade: 'แท้ศูนย์ (Original)',
-                compat: 'Samsung Galaxy A54 5G',
-                badge: null
-            },
-            'tools-set-1': {
-                brand: 'Tools',
-                category: 'เครื่องมือช่าง (Tools)',
-                title: 'ชุดไขควงซ่อมมือถือ 24 in 1 แม่เหล็กแรงสููง',
-                desc: 'หัวไขควง 24 แบบครอบคลุมการซ่อมมือถือ สมาร์ทโฟนทุกรุ่น ทำจากเหล็ก S2 แข็งพิเศษ พร้อมกล่องพกพา',
-                price: '฿350',
-                oldPrice: null,
-                image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=800&q=80',
-                warranty: 'รับประกันคุณภาพ 30 วัน',
-                grade: 'เกรดช่างมืออาชีพ (Professional Tool)',
-                compat: 'ใช้ได้กับ iPhone, Samsung และสมาร์ทโฟนทั่วไป',
-                badge: null
-            },
-            'tools-heatgun': {
-                brand: 'Tools',
-                category: 'เครื่องมือช่าง (Tools)',
-                title: 'เครื่องเป่าลมร้อนสำหรับลอกหน้าจอมือถือ',
-                desc: 'ปรับอุณหภูมิได้ละเอียดแม่นยำ พร้อมหัวเป่า 3 ขนาด สำหรับลอกหน้าจอ, ฝาหลัง และละลายกาว',
-                price: '฿1,200',
-                oldPrice: null,
-                image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80',
-                warranty: 'ประกันมอเตอร์ 6 เดือน',
-                grade: 'Industrial Grade',
-                compat: 'งานซ่อมทั่วไป / งานลอกกระจก',
-                badge: null
+        let productDatabase = {};
+
+        async function loadProducts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/products');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                productDatabase = await response.json();
+                renderProducts(productDatabase);
+            } catch (error) {
+                console.error('Error loading products from server:', error);
+                document.getElementById('productGrid').innerHTML = '<div class="col-span-full text-center text-red-500 p-8">เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้าจากเซิร์ฟเวอร์</div>';
             }
-        };
+        }
+
+        // Render products dynamically
+        function renderProducts(productsToRender) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = ''; // Clear previous items
+
+            const keys = Object.keys(productsToRender);
+            if(keys.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center text-gray-500 p-8">ไม่พบสินค้าที่ค้นหา</div>';
+                return;
+            }
+
+            keys.forEach(id => {
+                const prod = productsToRender[id];
+                const displayImg = (prod.images && prod.images.length > 0) ? prod.images[0] : prod.image;
+                const cleanPrice = parseInt(prod.price.replace(/[^0-9]/g, '')) || 0;
+                
+                let badgeHTML = '';
+                if(prod.badge) {
+                    badgeHTML = `<span class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg z-10 shadow-sm animate-pulse">${prod.badge}</span>`;
+                }
+
+                let oldPriceHTML = '';
+                if(prod.oldPrice) {
+                    oldPriceHTML = `<span class="text-xs text-slate-400 line-through font-light">${prod.oldPrice}</span>`;
+                }
+
+                const cardHTML = `
+                    <div class="product-card bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 ease-in-out border border-slate-100 overflow-hidden flex flex-col group" data-category="${prod.category}" data-brand="${prod.brand}">
+                        <div class="relative w-full aspect-square bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer" onclick="openProductModal('${id}')">
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-blue-100 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-lg z-10 shadow-sm">${prod.brand}</span>
+                            ${badgeHTML}
+                            <div class="skeleton-wrapper w-full h-full skeleton-loading absolute inset-0 z-0"></div>
+                            <img src="${displayImg}" alt="${prod.title}" loading="lazy" onload="this.previousElementSibling.style.display='none';" class="product-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out relative z-10 opacity-0 transition-opacity" style="opacity: 1;" onerror="this.src='https://via.placeholder.com/400';this.previousElementSibling.style.display='none';this.style.opacity=1;">
+                            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                                <button class="bg-white text-blue-600 font-medium py-2.5 px-5 rounded-full shadow-lg hover:bg-blue-50 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
+                                    <i class="fas fa-search-plus"></i> ดูรายละเอียด
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col">
+                            <div class="text-xs text-slate-400 mb-1.5 font-light uppercase tracking-wide">${prod.category}</div>
+                            <h3 class="font-medium text-slate-800 leading-snug mb-3 hover:text-blue-600 cursor-pointer transition-colors" onclick="openProductModal('${id}')">${prod.title}</h3>
+                            <div class="mt-auto flex items-end justify-between">
+                                <div>
+                                    ${oldPriceHTML}
+                                    <div class="text-xl font-semibold text-blue-600">${prod.price}</div>
+                                </div>
+                                <button onclick="addToCart({id: '${id}', title: '${prod.title}', price: ${cleanPrice}, image: '${displayImg}', category: '${prod.category}'})" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-sm hover:bg-blue-700 hover:shadow-md hover:scale-105 hover:brightness-110 transition-all duration-300 transform hover:-translate-y-0.5">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+        }
+
+        // Search Bar Logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = {};
+            
+            Object.keys(productDatabase).forEach(id => {
+                const prod = productDatabase[id];
+                if (
+                    (prod.title && prod.title.toLowerCase().includes(searchTerm)) ||
+                    (prod.category && prod.category.toLowerCase().includes(searchTerm)) ||
+                    (prod.brand && prod.brand.toLowerCase().includes(searchTerm)) ||
+                    (prod.desc && prod.desc.toLowerCase().includes(searchTerm))
+                ) {
+                    filtered[id] = prod;
+                }
+            });
+            
+            renderProducts(filtered);
+        });
+
+        // โหลดข้อมูลสินค้าทันทีที่เปิดหน้าเว็บ
+        loadProducts();
 
         const modal = document.getElementById('productModal');
         const modalContent = document.getElementById('productModalContent');
@@ -677,6 +544,45 @@
                 // closeProductModal(); 
             };
 
+            // Smart Related Products Logic
+            const relatedContainer = document.getElementById('modalRelatedProducts');
+            relatedContainer.innerHTML = ''; // clear previous
+
+            // 1. Filter out current product
+            let allKeys = Object.keys(productDatabase).filter(key => key !== productId);
+            
+            // 2. Score and sort (Brand Match = 2 points, Category Match = 1 point)
+            let scoredProducts = allKeys.map(key => {
+                let score = 0;
+                let relProd = productDatabase[key];
+                if (relProd.brand === prod.brand) score += 2;
+                if (relProd.category === prod.category) score += 1;
+                // Add tiny random fraction so equal scores are naturally shuffled
+                score += Math.random() * 0.5;
+                return { key: key, product: relProd, score: score };
+            });
+
+            // 3. Sort by score descending and take top 2 (or 4 if you prefer)
+            scoredProducts.sort((a, b) => b.score - a.score);
+            const topRelated = scoredProducts.slice(0, 2);
+
+            // 4. Build UI
+            topRelated.forEach(item => {
+                const relImg = item.product.images ? item.product.images[0] : item.product.image;
+                const html = `
+                    <div class="border border-slate-100 rounded-xl p-3 flex items-center space-x-3 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer group" onclick="openProductModal('${item.key}')">
+                        <div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                            <img src="${relImg}" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-800 font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">${item.product.title}</div>
+                            <div class="text-xs text-blue-600 font-semibold mt-0.5">${item.product.price}</div>
+                        </div>
+                    </div>
+                `;
+                relatedContainer.innerHTML += html;
+            });
+
             // Show modal with animation
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
@@ -729,8 +635,80 @@
             // Ensure clicked thumbnail is visible in mobile scroll
             thumbElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
+
+        // Add document load check for handling Image Loading explicitly in case onload fires too fast
+        document.addEventListener('DOMContentLoaded', () => {
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            lazyImages.forEach(img => {
+                if (img.complete) {
+                    if (img.previousElementSibling && img.previousElementSibling.classList.contains('skeleton-wrapper')) {
+                        img.previousElementSibling.style.display = 'none';
+                        img.style.opacity = '1';
+                    }
+                }
+            });
+        });
     </script>
     <!-- Global Scripts -->
     <script src="assets/js/script.js"></script>
+
+    <!-- Filter Sidebar Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryCheckboxes = document.querySelectorAll('.filter-category');
+            const brandCheckboxes = document.querySelectorAll('.filter-brand');
+            const productCards = document.querySelectorAll('.product-card');
+            const clearBtn = document.getElementById('clearFiltersBtn');
+
+            function filterProducts() {
+                // Get selected values
+                const selectedCategories = Array.from(categoryCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                
+                const selectedBrands = Array.from(brandCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+
+                productCards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    const cardBrand = card.getAttribute('data-brand');
+
+                    let categoryMatch = true;
+                    let brandMatch = true;
+
+                    if (selectedCategories.length > 0) {
+                        categoryMatch = selectedCategories.includes(cardCategory);
+                    }
+
+                    if (selectedBrands.length > 0) {
+                        brandMatch = selectedBrands.includes(cardBrand);
+                    }
+
+                    if (categoryMatch && brandMatch) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            // Add event listeners
+            categoryCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+            brandCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+
+            // Clear filter button
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    categoryCheckboxes.forEach(cb => cb.checked = false);
+                    brandCheckboxes.forEach(cb => cb.checked = false);
+                    filterProducts(); // Re-evaluate all
+                });
+            }
+
+            // Run once on load to ensure state is correct
+            filterProducts();
+        });
+    </script>
 </body>
 </html>

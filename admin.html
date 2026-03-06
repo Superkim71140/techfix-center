@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการหลังบ้าน (Admin) - TechFix Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-['Kanit'] text-gray-800">
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-blue-700"><i class="fas fa-cogs mr-2"></i> ระบบจัดการสินค้าหลังบ้าน (Admin Dashboard)</h1>
+
+        <!-- Add Product Form -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
+            <h2 class="text-xl font-semibold mb-6 flex items-center border-b pb-3 text-gray-700">
+                <i class="fas fa-plus-circle text-blue-500 mr-2"></i> เพิ่มสินค้าใหม่
+            </h2>
+            <form id="addProductForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">ชื่อสินค้า (Title) *</label>
+                    <input type="text" id="pTitle" required class="w-full border-gray-200 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">ราคา (Price) เช่น ฿3,500 *</label>
+                    <input type="text" id="pPrice" required class="w-full border-gray-200 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">ยี่ห้อ (Brand) *</label>
+                    <select id="pBrand" required class="w-full border-gray-200 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition bg-white">
+                        <option value="Apple">Apple</option>
+                        <option value="Samsung">Samsung</option>
+                        <option value="Xiaomi">Xiaomi</option>
+                        <option value="Oppo">Oppo</option>
+                        <option value="Vivo">Vivo</option>
+                        <option value="Tools">Tools (เครื่องมือ)</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">หมวดหมู่ (Category) *</label>
+                    <select id="pCategory" required class="w-full border-gray-200 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition bg-white">
+                        <option value="หน้าจอ (Screens)">หน้าจอ (Screens)</option>
+                        <option value="แบตเตอรี่ (Batteries)">แบตเตอรี่ (Batteries)</option>
+                        <option value="เครื่องมือช่าง (Tools)">เครื่องมือช่าง (Tools)</option>
+                        <option value="อุปกรณ์เสริม (Accessories)">อุปกรณ์เสริม (Accessories)</option>
+                        <option value="สมาร์ทโฟน (Smartphones)">สมาร์ทโฟน (Smartphones)</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">URL รูปภาพ (Image URL) *</label>
+                    <input type="text" id="pImage" required placeholder="เช่น https://images.unsplash.com/... หรือ assets/images/..." class="w-full border-gray-200 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">รายละเอียดแบบย่อ (Description)</label>
+                    <textarea id="pDesc" rows="2" class="w-full border-gray-200 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></textarea>
+                </div>
+
+                <div class="md:col-span-2 border-t pt-4 flex justify-end">
+                    <button type="submit" class="bg-blue-600 text-white font-medium px-6 py-2.5 rounded-lg hover:bg-blue-700 transition flex items-center shadow-sm">
+                        <i class="fas fa-save mr-2"></i> บันทึกสินค้า
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Product List Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <h2 class="text-xl font-semibold p-6 flex items-center border-b text-gray-700">
+                <i class="fas fa-list text-blue-500 mr-2"></i> รายการสินค้าปัจจุบัน
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-500 text-sm uppercase tracking-wide">
+                            <th class="p-4 font-medium border-b border-gray-200">รูปภาพ</th>
+                            <th class="p-4 font-medium border-b border-gray-200">รหัส (ID) / ชื่อสินค้า</th>
+                            <th class="p-4 font-medium border-b border-gray-200">แบรนด์</th>
+                            <th class="p-4 font-medium border-b border-gray-200">หมวดหมู่</th>
+                            <th class="p-4 font-medium border-b border-gray-200">ราคา</th>
+                            <th class="p-4 font-medium border-b border-gray-200 text-right">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody" class="divide-y divide-gray-100">
+                        <tr>
+                            <td colspan="6" class="p-8 text-center text-gray-400">กำลังโหลดข้อมูล...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const API_URL = 'http://localhost:3000/api/products';
+        let currentProducts = {};
+
+        // 1. Fetch products
+        async function fetchProducts() {
+            try {
+                const res = await fetch(API_URL);
+                currentProducts = await res.json();
+                renderTable();
+            } catch (err) {
+                console.error('Failed to fetch products:', err);
+                document.getElementById('productTableBody').innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`;
+            }
+        }
+
+        // 2. Render table
+        function renderTable() {
+            const tbody = document.getElementById('productTableBody');
+            tbody.innerHTML = '';
+            
+            const keys = Object.keys(currentProducts);
+            if(keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500">ไม่มีสินค้าในระบบ</td></tr>`;
+                return;
+            }
+
+            keys.forEach(id => {
+                const prod = currentProducts[id];
+                const displayImg = (prod.images && prod.images.length > 0) ? prod.images[0] : prod.image;
+                
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-blue-50/50 transition-colors group';
+                
+                tr.innerHTML = `
+                    <td class="p-4">
+                        <div class="w-12 h-12 bg-white rounded-lg border flex items-center justify-center overflow-hidden">
+                            <img src="${displayImg}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150'">
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="text-xs text-blue-500 tracking-wider mb-1 font-mono">${id}</div>
+                        <div class="text-sm font-medium text-gray-800 line-clamp-1">${prod.title || 'ไม่มีชื่อ'}</div>
+                    </td>
+                    <td class="p-4 text-sm text-gray-600">${prod.brand || '-'}</td>
+                    <td class="p-4 text-sm text-gray-600">${prod.category || '-'}</td>
+                    <td class="p-4 text-sm font-semibold text-blue-600">${prod.price || '-'}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="deleteProduct('${id}')" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-500 hover:text-white transition shadow-sm opacity-0 group-hover:opacity-100">
+                            <i class="fas fa-trash-alt"></i> ลบ
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 3. Add Product
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newProduct = {
+                title: document.getElementById('pTitle').value,
+                price: document.getElementById('pPrice').value,
+                brand: document.getElementById('pBrand').value,
+                category: document.getElementById('pCategory').value,
+                image: document.getElementById('pImage').value,
+                desc: document.getElementById('pDesc').value,
+            };
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newProduct)
+                });
+                
+                if(res.ok) {
+                    alert('บันทึกสินค้าเรียบร้อยแล้ว!');
+                    document.getElementById('addProductForm').reset();
+                    fetchProducts(); // Reload
+                } else {
+                    alert('เกิดข้อผิดพลาดในการบันทึกสินค้า');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('ไม่สามารถติดต่อ Server ได้');
+            }
+        });
+
+        // 4. Delete Product
+        async function deleteProduct(id) {
+            if(!confirm(`คุณต้องการลบสินค้า "${currentProducts[id].title}" หรือไม่?`)) return;
+
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if(res.ok) {
+                    fetchProducts(); // Reload table directly
+                } else {
+                    alert('ไม่สามารถลบสินค้าได้');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('ไม่สามารถติดต่อ Server ได้');
+            }
+        }
+
+        // Initial load
+        fetchProducts();
+    </script>
+</body>
+</html>
