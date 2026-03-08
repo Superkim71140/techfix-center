@@ -652,62 +652,60 @@
     <!-- Global Scripts -->
     <script src="assets/js/script.js"></script>
 
-    <!-- Filter Sidebar Logic -->
+    <!-- Filter Sidebar Logic (Data-Driven) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const categoryCheckboxes = document.querySelectorAll('.filter-category');
             const brandCheckboxes = document.querySelectorAll('.filter-brand');
-            const productCards = document.querySelectorAll('.product-card');
             const clearBtn = document.getElementById('clearFiltersBtn');
 
-            function filterProducts() {
-                // Get selected values
+            function applyFilters() {
+                // Get selected category values (e.g. ['screens', 'smartphones'])
                 const selectedCategories = Array.from(categoryCheckboxes)
                     .filter(cb => cb.checked)
-                    .map(cb => cb.value);
-                
+                    .map(cb => cb.value.toLowerCase());
+
+                // Get selected brand values (e.g. ['apple', 'xiaomi'])
                 const selectedBrands = Array.from(brandCheckboxes)
                     .filter(cb => cb.checked)
-                    .map(cb => cb.value);
+                    .map(cb => cb.value.toLowerCase());
 
-                productCards.forEach(card => {
-                    const cardCategory = card.getAttribute('data-category');
-                    const cardBrand = card.getAttribute('data-brand');
+                // If nothing is checked, show everything
+                if (selectedCategories.length === 0 && selectedBrands.length === 0) {
+                    renderProducts(productDatabase);
+                    return;
+                }
 
-                    let categoryMatch = true;
-                    let brandMatch = true;
+                // Filter productDatabase by selected checkboxes
+                const filtered = {};
+                Object.keys(productDatabase).forEach(id => {
+                    const prod = productDatabase[id];
+                    const prodCategory = (prod.category || '').toLowerCase();
+                    const prodBrand = (prod.brand || '').toLowerCase();
 
-                    if (selectedCategories.length > 0) {
-                        categoryMatch = selectedCategories.includes(cardCategory);
-                    }
-
-                    if (selectedBrands.length > 0) {
-                        brandMatch = selectedBrands.includes(cardBrand);
-                    }
+                    const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(prodCategory);
+                    const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(prodBrand);
 
                     if (categoryMatch && brandMatch) {
-                        card.style.display = '';
-                    } else {
-                        card.style.display = 'none';
+                        filtered[id] = prod;
                     }
                 });
+
+                renderProducts(filtered);
             }
 
-            // Add event listeners
-            categoryCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
-            brandCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+            // Add event listeners to all checkboxes
+            categoryCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
+            brandCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
 
-            // Clear filter button
+            // Clear filter button — uncheck all and show everything
             if (clearBtn) {
                 clearBtn.addEventListener('click', () => {
                     categoryCheckboxes.forEach(cb => cb.checked = false);
                     brandCheckboxes.forEach(cb => cb.checked = false);
-                    filterProducts(); // Re-evaluate all
+                    renderProducts(productDatabase);
                 });
             }
-
-            // Run once on load to ensure state is correct
-            filterProducts();
         });
     </script>
 </body>
